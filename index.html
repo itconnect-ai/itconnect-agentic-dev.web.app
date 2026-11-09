@@ -1,257 +1,140 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI 에이전틱 개발 자율 시뮬레이터 (Agentic Dev Visualizer)</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body class="dark-theme">
-  <!-- Scanline Background Effect for Dramatic Cyber Look -->
-  <div class="bg-scanline"></div>
-  <div class="bg-glow glow-1"></div>
-  <div class="bg-glow glow-2"></div>
-
-  <div class="app-container">
-    <!-- 상단 네비게이션 헤더 -->
-    <header class="navbar">
-      <div class="brand">
-        <div class="logo-icon pulsing-logo">
-          <span class="core-sparkle">✦</span>
-        </div>
-        <div class="brand-text">
-          <h1>안티그래비티 <span>에이전틱 엔진</span></h1>
-          <span class="badge badge-neon">멀티-에이전트 자율 개발 스웜 v3.6</span>
-        </div>
-      </div>
-
-      <div class="header-controls">
-        <button id="soundToggleBtn" class="sound-btn active" title="사운드 효과 켜기/끄기">
-          <span class="sound-icon">🔊</span> 효과음 ON
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f5f2" />
+    <meta
+      name="description"
+      content="한 줄의 요청이 실제 서비스가 되기까지. 하루루틴을 만드는 AI 에이전트 팀의 기획, 디자인, 병렬 개발, 교차 검증 과정을 직접 체험하세요."
+    />
+    <title>Agentic Studio — 하루루틴 제작 과정</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="experience.css" />
+    <link rel="stylesheet" href="viewport.css" />
+    <script src="scenarios.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">본문으로 이동</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <button class="brand" id="homeBrandBtn" aria-label="Agentic Studio 시작 화면">
+          <span class="brand-symbol" aria-hidden="true">a<span>↗</span></span>
+          <span>Agentic<span class="brand-light"> Studio</span></span>
         </button>
-        <div class="status-indicator">
-          <span class="status-dot pulsing" id="statusDot"></span>
-          <span class="status-text" id="statusText">요구사항 대기 중</span>
-        </div>
+        <span class="header-context">ITCONNECT <span>/</span> INTERACTIVE CLASSROOM</span>
+        <span class="header-project"
+          ><span class="status-dot"></span> Project 001 <strong>하루루틴</strong></span
+        >
       </div>
+      <nav class="process-nav container" aria-label="제작 과정">
+        <button class="nav-item active" data-stage="0" aria-current="page">오버뷰</button>
+        <button class="nav-item" data-stage="1"><span>01</span> 기획안</button>
+        <button class="nav-item" data-stage="2"><span>02</span> 기능정의</button>
+        <button class="nav-item" data-stage="3"><span>03</span> 설계안</button>
+        <button class="nav-item" data-stage="4"><span>04</span> 화면 디자인</button>
+        <button class="nav-item" data-stage="5"><span>05</span> 병렬 개발</button>
+        <button class="nav-item" data-stage="6"><span>06</span> 리뷰·회고</button>
+        <button class="nav-item" data-stage="7"><span>07</span> 완성 앱</button>
+      </nav>
     </header>
-
-    <!-- 메인 워크스페이스 -->
-    <main class="workspace">
-      <!-- 사이드바: 프롬프트 입력 및 서브에이전트 토폴로지 -->
-      <aside class="sidebar">
-        <!-- 요구사항 입력 카드 -->
-        <div class="card prompt-card">
-          <div class="card-header">
-            <h3><span class="icon">💡</span> 1. 인간 요구사항 입력 (Prompt)</h3>
-          </div>
-          <div class="card-body">
-            <label for="promptInput">개발할 서비스 주제 및 목표 지정</label>
-            <textarea id="promptInput" rows="4" placeholder="예: 실시간 성과 통계 차트와 자동 테스트가 포함된 습관 트래커 웹 앱 개발해줘.">실시간 성과 통계 차트, 습관 달성 기록, 자동 테스트 및 오류 수정이 포함된 Modern Habit Tracker 웹 애플리케이션 기획 및 개발</textarea>
-            
-            <div class="preset-triggers">
-              <span class="preset-label">🎯 시연용 추천 템플릿:</span>
-              <button class="chip active" data-scenario="habit">🔥 습관 트래커 App</button>
-              <button class="chip" data-scenario="kanban">📋 AI 칸반 보드</button>
-              <button class="chip" data-scenario="crypto">📈 코인 대시보드</button>
-            </div>
-
-            <button id="startAgenticBtn" class="btn btn-primary btn-glow">
-              <span class="btn-icon">🚀</span> AI Agentic Development 시작
-            </button>
-          </div>
-        </div>
-
-        <!-- 서브에이전트 토폴로지 카드 (Dynamic Flow Node Graph) -->
-        <div class="card topology-card">
-          <div class="card-header">
-            <h3><span class="icon">🕸️</span> 서브-에이전트 스웜 구조 (Topology)</h3>
-          </div>
-          <div class="card-body">
-            <div class="topology-graph">
-              <div class="node orchestrator" id="nodeOrchestrator">
-                <div class="node-icon">🧠</div>
-                <div class="node-info">
-                  <div class="node-title">총괄 메인 에이전트</div>
-                  <div class="node-subtitle">Master Orchestrator</div>
-                </div>
-              </div>
-
-              <!-- Animated Laser Connections -->
-              <div class="connections-container">
-                <div class="laser-line" id="laser1"></div>
-                <div class="laser-line" id="laser2"></div>
-                <div class="laser-line" id="laser3"></div>
-              </div>
-
-              <div class="sub-nodes-grid">
-                <div class="node sub-node" id="nodeUI">
-                  <div class="node-icon">🎨</div>
-                  <div class="node-info">
-                    <div class="node-title">UI/UX 전문 에이전트</div>
-                    <div class="node-status" id="statusUI">대기 중</div>
-                  </div>
-                </div>
-                <div class="node sub-node" id="nodeLogic">
-                  <div class="node-icon">⚡</div>
-                  <div class="node-info">
-                    <div class="node-title">개발 로직 에이전트</div>
-                    <div class="node-status" id="statusLogic">대기 중</div>
-                  </div>
-                </div>
-                <div class="node sub-node" id="nodeQA">
-                  <div class="node-icon">🛡️</div>
-                  <div class="node-info">
-                    <div class="node-title">QA/테스트 에이전트</div>
-                    <div class="node-status" id="statusQA">대기 중</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      <!-- 중앙 및 우측: 프로세스 실행 뷰 -->
-      <section class="main-content">
-        <!-- 단계별 프로그레스 스텝 바 + 재생 컨트롤 -->
-        <div class="pipeline-row">
-        <div class="pipeline-stepper">
-          <div class="step active" id="step1">
-            <div class="step-num">1</div>
-            <div class="step-title">기획 및 설계</div>
-          </div>
-          <div class="step-line" id="stepline1"></div>
-          <div class="step" id="step2">
-            <div class="step-num">2</div>
-            <div class="step-title">서브에이전트 할당</div>
-          </div>
-          <div class="step-line" id="stepline2"></div>
-          <div class="step" id="step3">
-            <div class="step-num">3</div>
-            <div class="step-title">실시간 코드 생성</div>
-          </div>
-          <div class="step-line" id="stepline3"></div>
-          <div class="step" id="step4">
-            <div class="step-num">4</div>
-            <div class="step-title">자율 검증 & Self-Healing</div>
-          </div>
-          <div class="step-line" id="stepline4"></div>
-          <div class="step" id="step5">
-            <div class="step-num">5</div>
-            <div class="step-title">최종 앱 완공</div>
-          </div>
+    <main class="container" id="main">
+      <div class="playback-bar" aria-label="시뮬레이션 재생 제어">
+        <div class="playback-status">
+          <span class="status-dot" id="playbackDot"></span
+          ><span id="playbackText" role="status">한 줄의 요청으로 시작하는 AI 팀 프로젝트</span>
         </div>
         <div class="playback-controls">
-          <button id="pauseBtn" class="ctrl-btn" disabled>⏸ 일시정지</button>
-          <div class="speed-group">
-            <button class="ctrl-btn speed-btn" data-speed="0.5">0.5x</button>
-            <button class="ctrl-btn speed-btn active" data-speed="1">1x</button>
-            <button class="ctrl-btn speed-btn" data-speed="2">2x</button>
+          <button class="icon-button" id="pauseBtn" disabled aria-label="일시정지" title="일시정지"></button>
+          <div class="speed-switch" role="group" aria-label="재생 속도">
+            <button data-speed="0.5" aria-pressed="false">0.5×</button>
+            <button data-speed="1" class="active" aria-pressed="true">1×</button>
+            <button data-speed="2" aria-pressed="false">2×</button>
           </div>
-          <button id="resetBtn" class="ctrl-btn">⟳ 리셋</button>
+          <button class="text-button reset-button" id="resetBtn">처음으로</button>
         </div>
-        </div>
-
-        <!-- 파티션 그리드 뷰 -->
-        <div class="view-grid">
-          <!-- 좌측: 멀티 에이전트 터미널 스트림 -->
-          <div class="card terminal-card">
-            <div class="card-header terminal-header">
-              <div class="window-buttons">
-                <span class="btn-dot red"></span>
-                <span class="btn-dot yellow"></span>
-                <span class="btn-dot green"></span>
+      </div>
+      <section id="stage0" class="stage-screen" aria-labelledby="homeTitle">
+        <div class="home-hero">
+          <div class="hero-copy">
+            <div class="eyebrow"><span class="eyebrow-line"></span> FROM PROMPT TO PRODUCT</div>
+            <h1 id="homeTitle">한 줄의 요청이,<br />하나의 서비스가 되기까지.</h1>
+            <p class="hero-description">
+              기획하는 AI, 만드는 AI, 의심하는 AI.<br />서로 다른 모델이 협업해 <strong>하루루틴</strong>을
+              완성합니다.
+            </p>
+            <form class="prompt-composer" id="promptForm">
+              <label for="projectPrompt"
+                ><span class="prompt-avatar" aria-hidden="true">나</span> 하루루틴 제작 요청
+                <span class="muted">시연용 입력</span></label
+              >
+              <textarea id="projectPrompt" rows="3" maxlength="300" required spellcheck="false">
+할 일을 체크하면 오늘의 달성률이 올라가고, 카테고리별로 관리할 수 있는 루틴 프로그램을 만들어줘.</textarea>
+              <div class="composer-bottom">
+                <span>아이디어는 내가. 실행은 AI 팀이.</span
+                ><button class="primary-button" id="startSimBtn" type="submit">
+                  제작 과정 재생 <span data-icon="arrow-right"></span>
+                </button>
               </div>
-              <span class="terminal-title">실시간 멀티-에이전트 작업 스트림 (Console Log)</span>
-              <span class="terminal-tag" id="activeAgentTag">시스템 대기 중</span>
-            </div>
-            <div class="card-body terminal-body" id="terminalLogs">
-              <div class="log-entry system"><span class="timestamp">[00:00:00]</span> 안티그래비티 에이전트 엔진이 가동 준비되었습니다. 요구사항을 입력하세요.</div>
+            </form>
+            <div class="hero-meta">
+              <span>7단계 자동 재생 · 약 1분</span
+              ><button class="text-button" data-go="7">
+                완성 앱 먼저 보기 <span data-icon="arrow-up-right"></span>
+              </button>
             </div>
           </div>
-
-          <!-- 우측: 아키텍처 문서 / 브라우저 자동 테스트 / 라이브 앱 미리보기 -->
-          <div class="card preview-card" id="previewCard">
-            <div class="card-header tabs-header">
-              <div class="tab active" data-target="planView">📝 아키텍처 기획서</div>
-              <div class="tab" data-target="codeStreamView">💻 코드 스트림</div>
-              <div class="tab" data-target="testBrowserView">🌐 E2E 브라우저 테스트</div>
-              <div class="tab" data-target="appPreviewView">✨ 최종 결과물 미리보기</div>
+          <div class="hero-preview">
+            <div class="preview-heading">
+              <span class="eyebrow">THE PRODUCT WE’RE BUILDING</span
+              ><span class="micro-label">하루루틴 / v1.0</span>
             </div>
-            <div class="card-body preview-body">
-              <!-- Tab 1: 아키텍처 기획서 -->
-              <div class="tab-pane active" id="planView">
-                <div class="plan-document" id="planDocument">
-                  <div class="empty-state">
-                    <span class="empty-icon">🗺️</span>
-                    <p>AI 메인 에이전트가 요구사항을 분석하면 이곳에 상세 구현 계획서(implementation_plan.md)가 실시간 시각화됩니다.</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Tab 2: 코드 생성 스트림 (에이전트별 듀얼 창 병렬 타이핑) -->
-              <div class="tab-pane" id="codeStreamView">
-                <div class="code-stream" id="codeStream">
-                  <div class="empty-state" id="codeEmptyState">
-                    <span class="empty-icon">💻</span>
-                    <p>코드 생성 단계가 시작되면 서브에이전트들이 각자의 파일을 병렬로 작성하는 모습이 실시간 스트리밍됩니다.</p>
-                  </div>
-                  <div class="code-window hidden" id="codeWindow0">
-                    <div class="code-window-header"><span class="agent-badge"></span><span class="code-filename"></span><span class="code-status" id="codeStatus0">작성 중...</span></div>
-                    <pre class="code-area"><code></code></pre>
-                  </div>
-                  <div class="code-window hidden" id="codeWindow1">
-                    <div class="code-window-header"><span class="agent-badge"></span><span class="code-filename"></span><span class="code-status" id="codeStatus1">작성 중...</span></div>
-                    <pre class="code-area"><code></code></pre>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Tab 3: 자율 브라우저 테스트 (Visual Testing Window) -->
-              <div class="tab-pane" id="testBrowserView">
-                <div class="simulated-browser" id="simulatedBrowser">
-                  <div class="browser-bar">
-                    <div class="browser-controls">
-                      <span>‹</span> <span>›</span> <span>↻</span>
-                    </div>
-                    <div class="url-input" id="browserUrl">http://localhost:3000/testing-session</div>
-                    <div class="test-badge" id="browserTestBadge">대기 중</div>
-                  </div>
-                  <div class="browser-viewport" id="browserViewport">
-                    <div class="browser-placeholder" id="browserPlaceholder">
-                      <span class="cursor-pointer" id="testCursor">🖱️</span>
-                      <div id="testInteractionOverlay" class="interaction-overlay">
-                        QA 서브에이전트가 가상 브라우저 E2E 테스트를 시작하길 기다리는 중...
-                      </div>
-                    </div>
-                  </div>
-                  <div class="test-console" id="testConsole">
-                    <div class="console-line info">> 브라우저 서브 에이전트 가동 준비 완료.</div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Tab 4: 최종 앱 미리보기 -->
-              <div class="tab-pane" id="appPreviewView">
-                <div class="live-app-container" id="liveAppContainer">
-                  <div class="empty-state">
-                    <span class="empty-icon">💻</span>
-                    <p>개발 및 자율 검증 단계가 완료되면 최종 완성된 웹 애플리케이션이 상호작용 가능하도록 탑재됩니다.</p>
-                  </div>
-                </div>
-              </div>
+            <div id="homePreview"></div>
+            <div class="preview-caption">
+              <span class="caption-line"></span><span>체크 하나가 숫자를 바꾸는, 매일 쓰는 작은 서비스.</span>
             </div>
           </div>
         </div>
+        <section class="pipeline-section" aria-labelledby="pipelineTitle">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">THE WORKFLOW</span>
+              <h2 id="pipelineTitle">혼자 답하는 AI에서, 함께 만드는 AI 팀으로.</h2>
+            </div>
+            <span class="micro-label">단계를 선택해 바로 살펴보세요</span>
+          </div>
+          <div class="pipeline-map" id="pipelineMap"></div>
+          <div class="workflow-principle">
+            <span data-icon="git-compare"></span><strong>만든 모델과 검토하는 모델을 다르게.</strong
+            ><span>서로의 빈틈을 확인하고, 배운 규칙을 다음 작업에 남깁니다.</span>
+          </div>
+        </section>
       </section>
+      <section id="stage1" class="stage-screen" hidden aria-labelledby="stageTitle1"></section>
+      <section id="stage2" class="stage-screen" hidden aria-labelledby="stageTitle2"></section>
+      <section id="stage3" class="stage-screen" hidden aria-labelledby="stageTitle3"></section>
+      <section id="stage4" class="stage-screen" hidden aria-labelledby="stageTitle4"></section>
+      <section id="stage5" class="stage-screen" hidden aria-labelledby="stageTitle5"></section>
+      <section id="stage6" class="stage-screen" hidden aria-labelledby="stageTitle6"></section>
+      <section id="stage7" class="stage-screen" hidden aria-labelledby="stageTitle7"></section>
+      <div class="stage-navigation" id="stageNavigation" hidden>
+        <button class="text-button" id="prevStageBtn"><span data-icon="arrow-left"></span> 이전 단계</button>
+        <div class="stage-navigation-center">
+          <span id="stageCounter"></span
+          ><button class="text-button" id="replayStageBtn">
+            <span data-icon="rotate-ccw"></span> 이 단계 다시 보기
+          </button>
+        </div>
+        <button class="secondary-button" id="nextStageBtn">
+          다음 단계 <span data-icon="arrow-right"></span>
+        </button>
+      </div>
+      <footer class="site-footer">
+        <span>ITCONNECT <span class="footer-divider">/</span> AI AGENTIC DEVELOPMENT</span
+        ><span>교육용 시뮬레이션 · 실제 AI 모델 호출 없음</span>
+      </footer>
     </main>
-  </div>
-
-  <script src="scenarios.js"></script>
-  <script src="app.js"></script>
-</body>
+    <div class="sr-only" id="appAnnouncement" role="status" aria-live="polite"></div>
+  </body>
 </html>
